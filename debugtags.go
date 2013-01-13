@@ -33,6 +33,7 @@ func (t *Tracer) Out(name string, items ...interface{}) {
 
 func (t *Tracer) Println(items ...interface{}) {
 	if t.Enabled {
+		fmt.Print(spaces[:t.level])
 		fmt.Println(items...)
 	}
 }
@@ -40,7 +41,8 @@ func (t *Tracer) Printf(format string, items ...interface{}) {
 	if t.Enabled {
 		str := fmt.Sprintf(format, items...)
 		str = strings.TrimSpace(str)
-		fmt.Printf("%s %s\n", spaces[:t.level], str)
+		fmt.Print(spaces[:t.level])
+		fmt.Println(str)
 	}
 }
 
@@ -50,7 +52,7 @@ func (t *Tracer) JSON(item interface{}) {
 		enc := json.NewEncoder(&b1)
 		enc.Encode(item)
 		var b2 bytes.Buffer
-		json.Indent(&b2, b1.Bytes(), "", " ")
+		json.Indent(&b2, b1.Bytes(), spaces[:t.level], " ")
 		fmt.Println(b2.String())
 	}
 }
